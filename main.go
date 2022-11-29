@@ -32,13 +32,21 @@ func CheckStatus() Status {
 	return Enable
 }
 
+func PrintTimeAndStatus(status Status) {
+	tn := time.Now()
+	t := time.Date(tn.Year(), tn.Month(), tn.Day(), tn.Hour(), tn.Minute(), tn.Second(), 0, time.FixedZone("UTC+2", 2*60*60))
+	text := []byte("")
+	text = t.AppendFormat(text, "MST 02.01.2006 15:04:05")
+	fmt.Println(string(text), status)
+}
+
 func main() {
 	status := CheckStatus()
-	fmt.Println(time.Now(), status.String())
+	PrintTimeAndStatus(status)
 	for {
 		time.Sleep(time.Second)
 		if newStatus := CheckStatus(); newStatus != status {
-			fmt.Println(time.Now(), newStatus.String())
+			PrintTimeAndStatus(newStatus)
 			dur := 5 * time.Second
 			deadLine := time.Now().Add(dur)
 			for deadLine.After(time.Now()) {
